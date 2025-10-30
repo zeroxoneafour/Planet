@@ -1,13 +1,21 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { Plan, plans } from "$lib/plan.svelte";
+	import { resolve } from "$app/paths";
+	import { saveData } from "$lib/sync.svelte";
+	import {
+		fromDateString,
+		fromDateTimeString,
+		toDateString,
+		toDateTimeString
+	} from "$lib/datetime";
 
 	const plan = $state(new Plan());
-
 	function submitForm() {
-		if (plan.name == "") return;
 		plans.push(plan);
-		goto("/");
+		saveData({ plans: plans });
+		// idk why the fuck it needs requestAnimationFrame this but okay
+		requestAnimationFrame(() => goto(resolve("/")));
 	}
 </script>
 
@@ -18,12 +26,7 @@
 <form class="mx-auto max-w-200 space-y-4 p-10">
 	<label class="label">
 		<span class="label-text">Plan Name</span>
-		<input
-			type="text"
-			class="input"
-			bind:value={plan.name}
-			placeholder="You must enter a plan name!"
-		/>
+		<input type="text" class="input" bind:value={plan.name} placeholder=" " />
 	</label>
 	<label class="label">
 		<span class="label-text">Plan Date</span>
@@ -32,19 +35,23 @@
 				<input
 					type="datetime-local"
 					class="max-sm:order-2 max-sm:input sm:ig-input"
-					bind:value={() => plan.date.toISOString().slice(0, 19), (s) => (plan.date = new Date(s))}
+					bind:value={() => toDateTimeString(plan.date), (v) => (plan.date = fromDateTimeString(v))}
 				/>
 			{:else}
 				<input
 					type="date"
 					class="max-sm:order-2 max-sm:input sm:ig-input"
-					bind:value={() => plan.date.toISOString().split("T")[0], (v) => (plan.date = new Date(v))}
+					bind:value={() => toDateString(plan.date), (v) => (plan.date = fromDateString(v))}
 				/>
 			{/if}
-			<select class="max-sm:order-1 max-sm:input sm:ig-input" bind:value={plan.exactTime}>
-				<option value={false}>Date</option>
-				<option value={true}>Time</option>
-			</select>
+			<button
+				class="max-sm:order-1 max-sm:input sm:ig-input"
+				type="button"
+				onclick={() => (plan.exactTime = !plan.exactTime)}
+				title="Add hour/minute"
+			>
+				{plan.exactTime ? "Time" : "Date"}
+			</button>
 		</div>
 	</label>
 	<label class="label">
@@ -54,25 +61,28 @@
 				type="datetime-local"
 				class="max-sm:order-2 max-sm:input sm:ig-input"
 				bind:value={
-					() => (plan.endDate ?? new Date()).toISOString().slice(0, 19),
-					(s) => (plan.endDate = new Date(s))
+					() => toDateTimeString(plan.endDate ?? new Date()),
+					(v) => (plan.endDate = fromDateTimeString(v))
 				}
 				disabled={plan.endDate == null}
 			/>
 
-			<select
+			<button
 				class="max-sm:order-1 max-sm:input sm:ig-input"
-				bind:value={
-					() => plan.endDate != null,
-					(v) => (v ? (plan.endDate = new Date()) : (plan.endDate = null))
-				}
+				type="button"
+				onclick={() => (plan.endDate = plan.endDate === null ? new Date() : null)}
+				title="Specify end time"
 			>
-				<option value={false}>No End Date</option>
-				<option value={true}>End Date</option>
-			</select>
+				{plan.endDate === null ? "No End Time" : "End Time"}
+			</button>
 		</div>
 	</label>
 	<div class="w-full p-10">
-		<button class="btn w-full preset-filled" onclick={submitForm}>Add Plan</button>
+		<button
+			type="submit"
+			class="btn w-full preset-filled"
+			onclick={submitForm}
+			disabled={plan.name == ""}>Add Plan</button
+		>
 	</div>
 </form>

@@ -2,14 +2,15 @@
 	import "../app.css";
 	import favicon from "$lib/assets/favicon.svg";
 	import { Navigation } from "@skeletonlabs/skeleton-svelte";
-	import { CalendarIcon, ListCheck, Plus, Settings } from "@lucide/svelte";
+	import { CalendarIcon, ListCheck, Plus, Settings, LoaderCircle } from "@lucide/svelte";
 	import { page } from "$app/state";
 	import Responsive, { queryTailwind } from "$lib/components/Responsive.svelte";
+	import { goto } from "$app/navigation";
 
 	const links = [
 		{
 			label: "Add Plan",
-			href: "/addplan",
+			href: "/addplan/",
 			icon: Plus
 		},
 		{
@@ -19,12 +20,12 @@
 		},
 		{
 			label: "Calendar",
-			href: "/calendar",
+			href: "/calendar/",
 			icon: CalendarIcon
 		},
 		{
 			label: "Settings",
-			href: "/settings",
+			href: "/settings/",
 			icon: Settings
 		}
 	];
@@ -40,28 +41,30 @@
 <Responsive></Responsive>
 
 <div class="flex size-full flex-col-reverse sm:flex-row">
-	{#if isMobile}
-		<Navigation.Bar>
-			{#each links as { label, href, icon }}
-				{@const Icon = icon}
-				<Navigation.Tile {href} {label} selected={page.url.pathname === href}>
-					<Icon />
-				</Navigation.Tile>
-			{/each}
-		</Navigation.Bar>
-	{:else}
-		<Navigation.Rail>
-			{#snippet tiles()}
+	{#if isMobile !== null}
+		<Navigation layout={isMobile ? "bar" : "rail"}>
+			<Navigation.Menu class="items-center justify-center">
 				{#each links as { label, href, icon }}
 					{@const Icon = icon}
-					<Navigation.Tile {href} {label} selected={page.url.pathname === href}>
+					<button
+						onclick={() => goto(href)}
+						class="btn flex-col items-center justify-center gap-1 hover:preset-tonal disabled:preset-tonal sm:aspect-square"
+						disabled={page.url.pathname === href}
+					>
 						<Icon />
-					</Navigation.Tile>
+						<span class="text-xs">{label}</span>
+					</button>
 				{/each}
-			{/snippet}
-		</Navigation.Rail>
+			</Navigation.Menu>
+		</Navigation>
 	{/if}
-	<div class="shrink-1 grow-1 overflow-scroll">
-		{@render children?.()}
+	<div class="relative shrink-1 grow-1">
+		{#if isMobile !== null}
+			{@render children?.()}
+		{:else}
+			<div class="flex h-full w-full items-center justify-center">
+				<LoaderCircle class="animate-spin"></LoaderCircle>
+			</div>
+		{/if}
 	</div>
 </div>

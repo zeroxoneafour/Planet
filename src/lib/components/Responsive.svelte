@@ -1,18 +1,19 @@
 <script module lang="ts">
 	// Usage instructions - Include the base component (Responsive) somewhere in your root layout, then use queryTailwind
 
-	const map: Map<string, { v: boolean }> = $state(new Map());
+	const map: Map<string, { v: boolean | null }> = $state(new Map());
 
 	/**
 	 * queryTailwind - Gets the status of a Tailwind media query
 	 * @param query The Tailwind query, appended with `:w-px` (ex. `"md:w-px"`)
 	 * @returns A closure that can be used with `$derived.by` to get a responsive answer to the query
 	 */
-	export function queryTailwind(query: string): () => boolean {
-		const isActive = $state({ v: true });
+	export function queryTailwind(query: string): () => boolean | null {
 		if (!map.has(query)) {
-			map.set(query, isActive);
+			const a = $state({ v: null });
+			map.set(query, a);
 		}
+		const isActive = map.get(query)!;
 		return () => isActive.v;
 	}
 </script>

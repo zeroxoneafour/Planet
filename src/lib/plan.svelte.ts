@@ -30,8 +30,8 @@ export class Plan {
 		if (json.checkedOff !== undefined) this.checkedOff = json.checkedOff;
 		if (json.timed !== undefined) this.timed = json.timed;
 		if (json.exactTime !== undefined) this.exactTime = json.exactTime;
-		if (json.date !== undefined) this.date = json.date;
-		if (json.endDate !== undefined) this.endDate = json.endDate;
+		if (json.date !== undefined) this.date = new Date(json.date);
+		if (json.endDate !== undefined) this.endDate = new Date(json.endDate);
 		return this;
 	}
 }
