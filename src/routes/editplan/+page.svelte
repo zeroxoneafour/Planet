@@ -33,7 +33,7 @@
 	<form class="mx-auto max-w-200 space-y-4 p-5">
 		<h1 class="text-center text-2xl font-bold">Edit Plan</h1>
 		<PlanEditor {plan}></PlanEditor>
-		<div class="flex w-full flex-row gap-10 p-10">
+		<div class="flex w-full flex-col gap-10 p-10 sm:flex-row">
 			<button
 				type="submit"
 				class="btn grow preset-filled"
