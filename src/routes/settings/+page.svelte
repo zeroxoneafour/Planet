@@ -37,8 +37,12 @@
 				</span>
 				<div class="input-group grid-cols-[1fr_auto]">
 					<input class="ig-input" type="text" bind:value={firebaseConfig} />
-					<button class="ig-input" onclick={() => (settings.firebaseConfig = firebaseConfig)}
-						>Submit</button
+					<button
+						class="ig-input"
+						onclick={() => {
+							settings.firebaseConfig = firebaseConfig;
+							firebaseManager.initializeFirebase(firebaseConfig);
+						}}>Submit</button
 					>
 				</div>
 			</label>
