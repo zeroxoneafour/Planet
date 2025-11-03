@@ -15,7 +15,7 @@ import {
 	update as dbUpdate,
 	get as dbGet,
 	set as dbSet,
-	Database
+	type Database
 } from "firebase/database";
 import { Settings } from "./settings.svelte";
 import { Plan } from "./plan.svelte";

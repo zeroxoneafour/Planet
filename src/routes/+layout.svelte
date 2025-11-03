@@ -1,6 +1,7 @@
 <script lang="ts">
 	import "../app.css";
-	import favicon from "$lib/assets/favicon.svg";
+	import darkModeLogo from "$lib/assets/dark/logo.svg";
+	import lightModeLogo from "$lib/assets/light/logo.svg";
 	import { Navigation } from "@skeletonlabs/skeleton-svelte";
 	import { CalendarIcon, ListCheck, Plus, Settings, LoaderCircle } from "@lucide/svelte";
 	import { page } from "$app/state";
@@ -31,18 +32,23 @@
 	];
 
 	let isMobile = $derived.by(queryTailwind("max-sm:w-px"));
+	let isDarkMode = $derived.by(queryTailwind("dark:w-px"));
 	let { children } = $props();
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	{#if isDarkMode}
+		<link rel="icon" href={darkModeLogo} />
+	{:else}
+		<link rel="icon" href={lightModeLogo} />
+	{/if}
 </svelte:head>
 
 <Responsive></Responsive>
 
-<div class="flex size-full flex-col-reverse sm:flex-row">
+<div class="flex size-full flex-col-reverse overflow-hidden sm:flex-row">
 	{#if isMobile !== null}
-		<Navigation layout={isMobile ? "bar" : "rail"}>
+		<Navigation layout={isMobile ? "bar" : "rail"} class="shrink-0">
 			<Navigation.Menu class="items-center justify-center">
 				{#each links as { label, href, icon }}
 					{@const Icon = icon}
@@ -58,7 +64,7 @@
 			</Navigation.Menu>
 		</Navigation>
 	{/if}
-	<div class="relative shrink-1 grow-1">
+	<div class="relative min-h-0 shrink grow">
 		{#if isMobile !== null}
 			{@render children?.()}
 		{:else}

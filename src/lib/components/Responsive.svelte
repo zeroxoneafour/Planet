@@ -1,7 +1,8 @@
 <script module lang="ts">
+	import { SvelteMap } from "svelte/reactivity";
 	// Usage instructions - Include the base component (Responsive) somewhere in your root layout, then use queryTailwind
 
-	const map: Map<string, { v: boolean | null }> = $state(new Map());
+	const map = new SvelteMap<string, { v: boolean | null }>();
 
 	/**
 	 * queryTailwind - Gets the status of a Tailwind media query

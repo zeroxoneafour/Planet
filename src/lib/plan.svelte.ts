@@ -3,35 +3,25 @@ export class Plan {
 	description: string = $state("");
 
 	checkedOff: boolean = $state(false);
-	timed: boolean = $state(false);
 	exactTime: boolean = $state(false);
 	date: Date = $state(new Date());
-	endDate: Date | null = $state(null);
-
-	completed: boolean = $derived.by(() => {
-		if (this.checkedOff || !this.timed) return this.checkedOff;
-		else if (this.endDate == null) return this.date.getDate() > Date.now();
-		else return this.endDate.getDate() > Date.now();
-	});
 
 	toJSON(): object {
 		return {
 			name: this.name,
+			description: this.description,
 			checkedOff: this.checkedOff,
-			timed: this.timed,
 			exactTime: this.exactTime,
-			date: this.date,
-			endDate: this.endDate
+			date: this.date
 		};
 	}
 
 	fromJSON(json: any): Plan {
 		if (json.name !== undefined) this.name = json.name;
+		if (json.description !== undefined) this.description = json.description;
 		if (json.checkedOff !== undefined) this.checkedOff = json.checkedOff;
-		if (json.timed !== undefined) this.timed = json.timed;
 		if (json.exactTime !== undefined) this.exactTime = json.exactTime;
 		if (json.date !== undefined) this.date = new Date(json.date);
-		if (json.endDate !== undefined) this.endDate = new Date(json.endDate);
 		return this;
 	}
 }

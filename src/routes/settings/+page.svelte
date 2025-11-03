@@ -21,7 +21,7 @@
 <Tabs defaultValue="account">
 	<Tabs.List>
 		<Tabs.Trigger value="account">Account</Tabs.Trigger>
-		<Tabs.Trigger value="display">Display</Tabs.Trigger>
+		<Tabs.Trigger value="planner">Planner</Tabs.Trigger>
 		<Tabs.Indicator />
 	</Tabs.List>
 	<div class="p-10">
@@ -62,17 +62,30 @@
 					</div>
 				</form>
 			{:else if firebaseManager.user != null}
-				<p>Logged in as {firebaseManager.user.email}</p>
-				<button class="btn" onclick={() => firebaseManager.logOut()}>Log out</button>
-				<p>Force Cloud Sync</p>
-				<button class="btn" onclick={() => saveData({ settings: settings, plans: plans }, true)}
-					>Force Upload</button
-				>
-				<button class="btn" onclick={() => loadAndSetData(true)}>Force Download</button>
+				<label class="label">
+					<span class="label-text">Logged in as {firebaseManager.user.email}</span>
+					<button class="btn" onclick={() => firebaseManager.logOut()}>Log out</button>
+				</label>
+				<label class="label">
+					<span class="label-text">Force Cloud Sync</span>
+					<button class="btn" onclick={() => saveData({ settings: settings, plans: plans }, true)}
+						>Force Upload</button
+					>
+					<button class="btn" onclick={() => loadAndSetData(true)}>Force Download</button>
+				</label>
 			{/if}
 		</Tabs.Content>
-		<Tabs.Content value="display">
-			<p>B</p>
+		<Tabs.Content value="planner" class="w-full max-w-200 space-y-4">
+			<label class="label">
+				<span class="label-text"> Displayed Days - {settings.plannerDisplayedDays}</span>
+				<input
+					type="range"
+					class="input"
+					bind:value={settings.plannerDisplayedDays}
+					min="3"
+					max="7"
+				/>
+			</label>
 		</Tabs.Content>
 	</div>
 </Tabs>
