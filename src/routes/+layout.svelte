@@ -64,7 +64,7 @@
 			</Navigation.Menu>
 		</Navigation>
 	{/if}
-	<div class="relative min-h-0 shrink grow">
+	<div class="relative min-h-0 shrink grow overflow-auto">
 		{#if isMobile !== null}
 			{@render children?.()}
 		{:else}

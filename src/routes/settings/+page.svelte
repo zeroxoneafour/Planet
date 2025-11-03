@@ -66,22 +66,26 @@
 					</div>
 				</form>
 			{:else if firebaseManager.user != null}
-				<label class="label">
+				<div class="label">
 					<span class="label-text">Logged in as {firebaseManager.user.email}</span>
-					<button class="btn" onclick={() => firebaseManager.logOut()}>Log out</button>
-				</label>
-				<label class="label">
+					<button class="btn preset-tonal" onclick={() => firebaseManager.logOut()}>Log out</button>
+				</div>
+				<div class="label">
 					<span class="label-text">Force Cloud Sync</span>
-					<button class="btn" onclick={() => saveData({ settings: settings, plans: plans }, true)}
+					<button
+						class="btn preset-tonal"
+						onclick={() => saveData({ settings: settings, plans: plans }, true)}
 						>Force Upload</button
 					>
-					<button class="btn" onclick={() => loadAndSetData(true)}>Force Download</button>
-				</label>
+					<button class="btn preset-tonal" onclick={() => loadAndSetData(true)}
+						>Force Download</button
+					>
+				</div>
 			{/if}
 		</Tabs.Content>
 		<Tabs.Content value="planner" class="w-full max-w-200 space-y-4">
 			<label class="label">
-				<span class="label-text"> Displayed Days - {settings.plannerDisplayedDays}</span>
+				<span class="label-text">Displayed Days - {settings.plannerDisplayedDays}</span>
 				<input
 					type="range"
 					class="input"
@@ -89,6 +93,10 @@
 					min="3"
 					max="7"
 				/>
+			</label>
+			<label class="label">
+				<span class="label-text">Display untimed plans first</span>
+				<input type="checkbox" class="checkbox" bind:checked={settings.plannerNoTimeOver} />
 			</label>
 		</Tabs.Content>
 	</div>

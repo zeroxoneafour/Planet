@@ -6,9 +6,9 @@
 	import { saveData } from "$lib/sync.svelte";
 	import type { PageProps } from "./$types";
 
-	let { params, data }: PageProps = $props();
-	let originalPlan: Plan | undefined = data.plan;
-	let plan: Plan = new Plan().fromJSON(data.plan?.toJSON());
+	const { params, data }: PageProps = $props();
+	const originalPlan: Plan | undefined = data.plan;
+	const plan: Plan = new Plan().fromJSON(data.plan?.toJSON());
 
 	function updatePlan() {
 		if (originalPlan === undefined || plan.name === "") return;
@@ -30,24 +30,21 @@
 </svelte:head>
 
 {#if originalPlan !== undefined}
-	<form class="mx-auto max-w-200 space-y-4 p-5">
+	<div class="mx-auto max-w-200 space-y-4 p-5">
 		<h1 class="text-center text-2xl font-bold">Edit Plan</h1>
 		<PlanEditor {plan}></PlanEditor>
 		<div class="flex w-full flex-col gap-10 p-10 sm:flex-row">
-			<button
-				type="submit"
-				class="btn grow preset-filled"
-				onclick={updatePlan}
-				disabled={plan.name == ""}>Update Plan</button
+			<button class="btn grow preset-filled" onclick={updatePlan} disabled={plan.name == ""}
+				>Update Plan</button
 			>
-			<button
-				type="reset"
-				class="btn grow preset-filled"
-				onclick={cancelChanges}
-				disabled={plan.name == ""}>Cancel Changes</button
+			<button class="btn grow preset-filled" onclick={cancelChanges} disabled={plan.name == ""}
+				>Cancel Changes</button
 			>
 		</div>
-	</form>
+	</div>
 {:else}
-	<p>Plan not found!</p>
+	<div class="flex h-full w-full flex-col items-center justify-center gap-10">
+		<p>Plan not found!</p>
+		<a class="btn preset-tonal" href={resolve("/")}>Return to Planner</a>
+	</div>
 {/if}
