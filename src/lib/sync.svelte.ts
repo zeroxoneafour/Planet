@@ -25,6 +25,36 @@ export interface SyncData {
 	settings?: Settings;
 }
 
+class TimestampedSyncData implements SyncData {
+	plans?: Plan[];
+	settings?: Settings;
+	timestamp: number;
+
+	constructor(data: SyncData, timestamp: number = Date.now()) {
+		this.plans = data.plans;
+		this.settings = data.settings;
+		this.timestamp = timestamp;
+	}
+
+	toJSON(): object {
+		return {
+			plans: this.plans?.map((x) => x.toJSON()),
+			settings: this.settings?.toJSON(),
+			timestamp: this.timestamp
+		};
+	}
+
+	static fromJSON(obj: any): TimestampedSyncData {
+		return new TimestampedSyncData(
+			{
+				plans: obj.plans ?? undefined,
+				settings: obj.settings ?? undefined
+			},
+			obj.timestamp ?? undefined
+		);
+	}
+}
+
 function syncDataToJSON(data: SyncData): any {
 	let object: any = { timestamp: Date.now() };
 	if (data.plans) object.plans = data.plans?.map((x) => x.toJSON());
@@ -78,24 +108,28 @@ class FirebaseManager {
 		this.user = null;
 	}
 
-	async saveData(data: any, overrideCloud = false) {
+	async saveData(data: TimestampedSyncData, overrideCloud = false) {
 		if (this.user == null || this.auth == null || this.database == null) return;
 		let ref = dbRef(this.database, this.dbPath);
 		if (overrideCloud) {
-			await dbSet(ref, data);
+			await dbSet(ref, data.toJSON());
 		} else {
-			await dbUpdate(ref, data);
+			await dbUpdate(ref, data.toJSON());
 		}
 	}
 
-	async loadData(): Promise<any> {
+	async loadData(): Promise<TimestampedSyncData | null> {
 		if (this.user == null || this.auth == null || this.database == null) return null;
 		return (await dbGet(dbRef(this.database, this.dbPath))).val();
 	}
 }
 
+function saveDataLocally() {}
+
+function loadDataLocally() {}
+
 export function saveData(inData: SyncData, overrideCloud = false) {
-	let data = syncDataToJSON(inData);
+	let data = new TimestampedSyncData(inData);
 	if (data.settings) {
 		localStorage.setItem("planet_settings", JSON.stringify(data.settings));
 	}

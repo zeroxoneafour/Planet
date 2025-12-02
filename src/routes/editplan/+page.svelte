@@ -37,9 +37,7 @@
 			<button class="btn grow preset-filled" onclick={updatePlan} disabled={plan.name == ""}
 				>Update Plan</button
 			>
-			<button class="btn grow preset-filled" onclick={cancelChanges} disabled={plan.name == ""}
-				>Cancel Changes</button
-			>
+			<button class="btn grow preset-filled" onclick={cancelChanges}>Cancel Changes</button>
 		</div>
 	</div>
 {:else}

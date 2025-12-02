@@ -19,7 +19,7 @@
 	}
 </script>
 
-<div class="invisible fixed left-[-1px] h-0">
+<div class="invisible fixed -left-px h-0">
 	{#each map.entries() as [str, isActive]}
 		<div
 			class="{str} w-0"

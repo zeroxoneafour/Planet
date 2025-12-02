@@ -129,22 +129,21 @@
 						</div>
 						<Popover.Positioner>
 							<Popover.Content
-								class="flex max-w-md flex-row gap-4 card bg-surface-100-900 p-4 shadow-xl"
+								class="flex max-w-md flex-col items-center gap-4 card bg-surface-100-900 p-4 shadow-xl"
 							>
-								<div class="flex h-auto grow flex-col items-center gap-2">
-									<Popover.Title class="grow-0 font-bold">{plan.name}</Popover.Title>
-									{#if plan.exactTime}
-										<p class="grow-0">At {plan.date.toLocaleTimeString()}</p>
-									{/if}
-									<Popover.Description
-										class="flex grow items-center break-all {plan.description === ''
-											? 'italic'
-											: ''}"
-									>
-										{plan.description !== "" ? plan.description : "No description set"}
-									</Popover.Description>
-								</div>
-								<div class="flex flex-col gap-2">
+								<Popover.Title class="grow-0 font-bold">{plan.name}</Popover.Title>
+								{#if plan.exactTime}
+									<p class="grow-0">At {plan.date.toLocaleTimeString()}</p>
+								{/if}
+								<Popover.Description
+									class="flex grow items-center text-center break-all whitespace-pre-wrap {plan.description ===
+									''
+										? 'italic'
+										: ''}"
+								>
+									{plan.description !== "" ? plan.description : "No description set"}
+								</Popover.Description>
+								<div class="flex w-auto flex-row justify-center gap-2">
 									<a
 										class="btn-icon preset-tonal"
 										href={resolve("/editplan") + "?plan=" + plans.indexOf(plan)}
